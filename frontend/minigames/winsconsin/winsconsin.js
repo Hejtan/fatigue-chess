@@ -5,6 +5,8 @@ const translations = {
     start: "I understand",
     correct: "Correct",
     incorrect: "Incorrect",
+    testComplete: "Test complete!",
+    continue: "Continue",
   },
   pl: {
     instructions:
@@ -12,6 +14,8 @@ const translations = {
     start: "Rozumiem",
     correct: "Poprawnie",
     incorrect: "Błędnie",
+    testComplete: "Test zakończony!",
+    continue: "Kontynuuj",
   },
 };
 
@@ -60,10 +64,6 @@ document.getElementById("start-btn").addEventListener("click", () => {
     pile.addEventListener("click", handlePileClick);
   });
 });
-
-// ────────────────────────────
-// Card deck generation
-// ────────────────────────────
 
 const shapes = ["circle", "triangle", "star", "cross"];
 const colors = ["blue", "green", "red", "yellow"];
@@ -132,7 +132,6 @@ function handlePileClick(e) {
   console.log("Clicked pile:", selectedPile);
   console.log("Time (ms):", timeTaken);
 
-  // Save result
   const result = {
     card: currentCard,
     selectedPile,
@@ -152,7 +151,6 @@ function handlePileClick(e) {
       result.ruleChanged = true;
     }
   } else {
-    // classify type of error
     result.errorType =
       correctInARow === 0 ? "rule-change-expected" : "unexpected";
     correctInARow = 0;
@@ -160,16 +158,44 @@ function handlePileClick(e) {
 
   results.push(result);
 
-  // show feedback
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden", "correct", "incorrect");
   feedback.classList.add(isCorrect ? "correct" : "incorrect");
   feedback.textContent = isCorrect ? t.correct : t.incorrect;
 
-  // delay before next card
   setTimeout(() => {
     feedback.classList.add("hidden");
     currentCardIndex++;
     loadNextCard();
   }, 600);
+}
+
+function endTest() {
+  const container = document.getElementById("game");
+
+  container.innerHTML = "";
+
+  const message = document.createElement("div");
+  message.innerHTML = `<h2>${t.testComplete}</h2>`;
+
+  const button = document.createElement("button");
+  button.id = "continue-btn";
+  button.textContent = t.continue;
+  button.style.marginTop = "1.5em";
+  button.style.padding = "1em 2em";
+  button.style.fontSize = "1.2em";
+  button.style.borderRadius = "10px";
+  button.style.cursor = "pointer";
+  button.style.border = "none";
+  button.style.background = "#007BFF";
+  button.style.color = "white";
+
+  container.appendChild(message);
+  container.appendChild(button);
+
+  localStorage.setItem("winsconsin_results", JSON.stringify(results));
+
+  button.addEventListener("click", () => {
+    window.location.href = "../finish/index.html";
+  });
 }
