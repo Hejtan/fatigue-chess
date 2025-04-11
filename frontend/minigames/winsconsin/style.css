@@ -1,0 +1,80 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  background-color: white;
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#instructions {
+  font-size: 1.5em;
+  margin-bottom: 1.5rem;
+}
+
+#start-btn {
+  font-size: 1.2em;
+  padding: 1em 2em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#card-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+#current-card {
+  width: 150px;
+  height: auto;
+}
+
+#piles {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pile {
+  width: 120px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pile:hover {
+  transform: scale(1.1);
+}
+.hidden {
+  display: none !important;
+}
+#feedback {
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+  transition: opacity 0.3s;
+}
+
+#feedback.correct {
+  color: green;
+}
+
+#feedback.incorrect {
+  color: red;
+}

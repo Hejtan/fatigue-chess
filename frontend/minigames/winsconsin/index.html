@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wisconsin Card Sorting</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game" class="center">
+      <p id="instructions"></p>
+      <button id="start-btn"></button>
+
+      <div id="card-area" class="hidden">
+        <div id="test-ui" class="hidden">
+          <div id="feedback" class="hidden"></div>
+          <img id="current-card" src="" alt="Current card" />
+
+          <div id="piles">
+            <img
+              class="pile"
+              data-pile="0"
+              src="cards/cross_red_1.png"
+              alt="Pile 1"
+            />
+            <img
+              class="pile"
+              data-pile="1"
+              src="cards/circle_blue_2.png"
+              alt="Pile 2"
+            />
+            <img
+              class="pile"
+              data-pile="2"
+              src="cards/star_green_3.png"
+              alt="Pile 3"
+            />
+            <img
+              class="pile"
+              data-pile="3"
+              src="cards/triangle_yellow_4.png"
+              alt="Pile 4"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="winsconsin.js"></script>
+  </body>
+</html>
