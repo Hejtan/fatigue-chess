@@ -1,0 +1,121 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  background-color: white;
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#instructions {
+  font-size: 1.5em;
+  margin-bottom: 1.5rem;
+}
+
+#start-btn {
+  font-size: 1.2em;
+  padding: 1em 2em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#board {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 4vw;
+  margin-top: 3vh;
+  height: 60vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.board-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.peg-row {
+  display: flex;
+  gap: 2vw;
+  align-items: flex-end;
+}
+
+.peg-label {
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: black;
+  text-align: center;
+}
+
+.peg.goal {
+  background-color: #e0e0e0;
+  opacity: 0.7;
+}
+.peg.goal {
+  height: 200px;
+}
+
+.peg:not(.goal) {
+  height: 300px;
+}
+
+.peg {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80px;
+  height: 100%;
+  background-color: #ddd;
+  border-radius: 8px;
+  padding: 5px;
+  position: relative;
+}
+
+.ball {
+  height: 30px;
+  border-radius: 15px;
+  margin: 4px 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.ball.size-1 {
+  width: 40px;
+  background-color: red;
+}
+.ball.size-2 {
+  width: 60px;
+  background-color: orange;
+}
+.ball.size-3 {
+  width: 80px;
+  background-color: yellowgreen;
+}
+.ball.size-4 {
+  width: 100px;
+  background-color: steelblue;
+}
+.ball.size-5 {
+  width: 120px;
+  background-color: purple;
+}
+
+.ball.held {
+  outline: 3px solid black;
+  transform: translateY(-10px);
+}

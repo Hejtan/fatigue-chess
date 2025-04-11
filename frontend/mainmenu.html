@@ -1,150 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Main Menu</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .test-container {
-      max-width: 600px;
-      margin: 80px auto;
-      text-align: center;
-    }
-
-    .test-block {
-      margin: 20px 0;
-    }
-
-    .test-button {
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    .test-button:hover {
-      background-color: #0056b3;
-    }
-
-    .test-button[disabled] {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    .code-input {
-      padding: 8px;
-      width: 180px;
-      border-radius: 5px;
-      border: 1px solid #aaa;
-      margin-top: 10px;
-    }
-
-    .note {
-      font-size: 14px;
-      color: #555;
-      margin-top: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="test-container">
-    <h1 id="title"></h1>
-
-    <div class="test-block">
-      <button class="test-button" onclick="goToTest('test_fresh.html')">
-        🟢 <span id="btn-fresh"></span>
-      </button>
-    </div>
-
-    <div class="test-block">
-      <button
-        class="test-button"
-        onclick="goToTestWithCode('test_tired.html', 'code1')"
-      >
-        🟡 <span id="btn-tired1"></span>
-      </button>
-      <br />
-      <input
-        type="text"
-        id="code1"
-        class="code-input"
-        placeholder=""
-      />
-    </div>
-
-    <div class="test-block">
-      <button class="test-button" disabled>
-        🔒 <span id="btn-tired2"></span>
-      </button>
-      <br />
-      <input
-        type="text"
-        disabled
-        class="code-input"
-        id="code2"
-        placeholder=""
-      />
-      <div class="note" id="note-may"></div>
-    </div>
-  </div>
-
-  <script>
-    const translations = {
-      en: {
-        title: "Choose a test session",
-        fresh: "Rested state",
-        tired1: "After a tiring day",
-        tired2: "After a tiring day (May)",
-        note: "This option will be available in May.",
-        missingCode: "Please enter your participant code.",
-        placehold: "Code",
-
-      },
-      pl: {
-        title: "Wybierz sesję testową",
-        fresh: "Stan wypoczęty",
-        tired1: "Po wyczerpującym dniu",
-        tired2: "Po wyczerpującym dniu (maj)",
-        note: "Ta opcja będzie dostępna w maju.",
-        missingCode: "Proszę podać kod uczestnika.",
-        placehold: "Kod",
-      },
-    };
-
-    function getSavedLanguage() {
-      const match = document.cookie.match(/(?:^|; )lang=([^;]+)/);
-      return match ? match[1] : "en";
-    }
-
-    const lang = getSavedLanguage();
-    const t = translations[lang];
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("title").textContent = t.title;
-      document.getElementById("btn-fresh").textContent = t.fresh;
-      document.getElementById("btn-tired1").textContent = t.tired1;
-      document.getElementById("btn-tired2").textContent = t.tired2;
-      document.getElementById("note-may").textContent = t.note;
-      document.getElementById("code2").placeholder = t.placehold;
-      document.getElementById("code1").placeholder = t.placehold;
-    });
-
-    function goToTest(url) {
-      window.location.href = url;
-    }
-
-    function goToTestWithCode(url, codeInputId) {
-      const code = document.getElementById(codeInputId).value.trim();
-      if (!code) {
-        alert(t.missingCode);
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <title>Main Menu</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .test-container {
+        max-width: 600px;
+        margin: 80px auto;
+        text-align: center;
       }
-      window.location.href = `${url}?code=${encodeURIComponent(code)}`;
-    }
-  </script>
-</body>
+
+      .test-block {
+        margin: 20px 0;
+      }
+
+      .test-button {
+        padding: 12px 24px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      .test-button:hover {
+        background-color: #0056b3;
+      }
+
+      .test-button[disabled] {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .code-input {
+        padding: 8px;
+        width: 180px;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+        margin-top: 10px;
+      }
+
+      .note {
+        font-size: 14px;
+        color: #555;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1 id="title"></h1>
+
+      <div class="test-block">
+        <button class="test-button" onclick="goToTest('test_fresh.html')">
+          🟢 <span id="btn-fresh"></span>
+        </button>
+      </div>
+
+      <div class="test-block">
+        <button
+          class="test-button"
+          onclick="goToTestWithCode('test_tired.html', 'code1')"
+        >
+          🟡 <span id="btn-tired1"></span>
+        </button>
+        <br />
+        <input type="text" id="code1" class="code-input" placeholder="" />
+      </div>
+
+      <div class="test-block">
+        <button class="test-button" disabled>
+          🔒 <span id="btn-tired2"></span>
+        </button>
+        <br />
+        <input
+          type="text"
+          disabled
+          class="code-input"
+          id="code2"
+          placeholder=""
+        />
+        <div class="note" id="note-may"></div>
+      </div>
+    </div>
+
+    <script>
+      const translations = {
+        en: {
+          title: "Choose a test session",
+          fresh: "Rested state",
+          tired1: "After a tiring day",
+          tired2: "After a tiring day (May)",
+          note: "This option will be available in May.",
+          missingCode: "Please enter your participant code.",
+          placehold: "Code",
+        },
+        pl: {
+          title: "Wybierz sesję testową",
+          fresh: "Stan wypoczęty",
+          tired1: "Po wyczerpującym dniu",
+          tired2: "Po wyczerpującym dniu (maj)",
+          note: "Ta opcja będzie dostępna w maju.",
+          missingCode: "Proszę podać kod uczestnika.",
+          placehold: "Kod",
+        },
+      };
+
+      function getSavedLanguage() {
+        const match = document.cookie.match(/(?:^|; )lang=([^;]+)/);
+        return match ? match[1] : "en";
+      }
+
+      const lang = getSavedLanguage();
+      const t = translations[lang];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("title").textContent = t.title;
+        document.getElementById("btn-fresh").textContent = t.fresh;
+        document.getElementById("btn-tired1").textContent = t.tired1;
+        document.getElementById("btn-tired2").textContent = t.tired2;
+        document.getElementById("note-may").textContent = t.note;
+        document.getElementById("code2").placeholder = t.placehold;
+        document.getElementById("code1").placeholder = t.placehold;
+      });
+
+      function goToTest(url) {
+        window.location.href = url;
+      }
+
+      function goToTestWithCode(url, codeInputId) {
+        const code = document.getElementById(codeInputId).value.trim();
+        if (!code) {
+          alert(t.missingCode);
+          return;
+        }
+        window.location.href = `${url}?code=${encodeURIComponent(code)}`;
+      }
+    </script>
+  </body>
 </html>

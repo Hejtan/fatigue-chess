@@ -1,21 +1,23 @@
 const translations = {
-    en: {
-      instructions: "Memorize the card positions. After 5 seconds, they will flip. Match all the pairs with the fewest mistakes.",
-      start: "I understand",
-      time: "Time",
-      mistakes: "Mistakes",
-      finish: "You completed the game!",
-      continue: "Continue",
-    },
-    pl: {
-      instructions: "Zapamiętaj ułożenie kart. Po 5 sekundach zostaną zakryte. Dopasuj wszystkie pary robiąc jak najmniej błędów.",
-      start: "Rozumiem",
-      time: "Czas",
-      mistakes: "Błędy",
-      finish: "Ukończyłeś grę!",
-      continue: "Kontynuuj",
-    }
-  };
+  en: {
+    instructions:
+      "Memorize the card positions. After 5 seconds, they will flip. Match all the pairs with the fewest mistakes.",
+    start: "I understand",
+    time: "Time",
+    mistakes: "Mistakes",
+    finish: "You completed the game!",
+    continue: "Continue",
+  },
+  pl: {
+    instructions:
+      "Zapamiętaj ułożenie kart. Po 5 sekundach zostaną zakryte. Dopasuj wszystkie pary robiąc jak najmniej błędów.",
+    start: "Rozumiem",
+    time: "Czas",
+    mistakes: "Błędy",
+    finish: "Ukończyłeś grę!",
+    continue: "Kontynuuj",
+  },
+};
 
 let lockBoard = false;
 
@@ -57,7 +59,7 @@ function createBoard() {
   shuffleArray(cardValues);
 
   board.innerHTML = "";
-  cardValues.forEach(value => {
+  cardValues.forEach((value) => {
     const card = document.createElement("div");
     card.classList.add("card");
     card.dataset.value = value;
@@ -67,7 +69,7 @@ function createBoard() {
 }
 
 function hideAllCards() {
-  document.querySelectorAll(".card").forEach(card => {
+  document.querySelectorAll(".card").forEach((card) => {
     card.classList.remove("revealed", "correct", "wrong");
     card.style.backgroundImage = `url('cards/back.png')`;
   });
@@ -95,104 +97,98 @@ function stopTimer() {
 }
 
 function checkMatch() {
-    if (!firstCard || !secondCard) return;
-  
-    lockBoard = true;
-  
-    const isMatch = firstCard.dataset.value === secondCard.dataset.value;
-  
-    if (isMatch) {
-      firstCard.classList.add("correct");
-      secondCard.classList.add("correct");
-  
-      setTimeout(() => {
-        firstCard.style.visibility = "hidden";
-        secondCard.style.visibility = "hidden";
-        matchedPairs++;
-        firstCard = secondCard = null;
-        lockBoard = false;
-  
-        if (matchedPairs === 12) {
-            stopTimer();
+  if (!firstCard || !secondCard) return;
 
-            const seconds = Math.floor((Date.now() - timerStart) / 1000);
-            localStorage.setItem("matchpairs_time", seconds);
-            localStorage.setItem("matchpairs_mistakes", mistakes);
+  lockBoard = true;
 
-            // Hide game UI
-            document.getElementById("board").classList.add("hidden");
-            document.getElementById("stats").classList.add("hidden");
+  const isMatch = firstCard.dataset.value === secondCard.dataset.value;
 
-            // Dynamically create end screen
-            const endScreen = document.createElement("div");
-            endScreen.style.position = "fixed";
-            endScreen.style.top = "0";
-            endScreen.style.left = "0";
-            endScreen.style.width = "100vw";
-            endScreen.style.height = "100vh";
-            endScreen.style.backgroundColor = "white";
-            endScreen.style.display = "flex";
-            endScreen.style.flexDirection = "column";
-            endScreen.style.alignItems = "center";
-            endScreen.style.justifyContent = "center";
-            endScreen.style.textAlign = "center";
-            endScreen.style.zIndex = "999";
+  if (isMatch) {
+    firstCard.classList.add("correct");
+    secondCard.classList.add("correct");
 
-            const message = document.createElement("p");
-            message.textContent = t.finish;
-            message.style.fontSize = "2em";
-            message.style.marginBottom = "20px";
+    setTimeout(() => {
+      firstCard.style.visibility = "hidden";
+      secondCard.style.visibility = "hidden";
+      matchedPairs++;
+      firstCard = secondCard = null;
+      lockBoard = false;
 
-            const button = document.createElement("button");
-            button.textContent = t.continue;
-            button.style.fontSize = "1.2em";
-            button.style.padding = "1em 2em";
-            button.style.borderRadius = "8px";
-            button.style.backgroundColor = "#007bff";
-            button.style.color = "white";
-            button.style.border = "none";
-            button.style.cursor = "pointer";
+      if (matchedPairs === 12) {
+        stopTimer();
 
-            button.addEventListener("click", () => {
-                window.location.href = "../game3/index.html"; // adjust if needed
-            });
+        const seconds = Math.floor((Date.now() - timerStart) / 1000);
+        localStorage.setItem("matchpairs_time", seconds);
+        localStorage.setItem("matchpairs_mistakes", mistakes);
 
-            endScreen.appendChild(message);
-            endScreen.appendChild(button);
-            document.body.appendChild(endScreen);
+        document.getElementById("board").classList.add("hidden");
+        document.getElementById("stats").classList.add("hidden");
 
-          }
-          
-  
-      }, 1000);
-  
-    } else {
-      firstCard.classList.add("wrong");
-      secondCard.classList.add("wrong");
-      mistakes++;
-  
-      setTimeout(() => {
-        firstCard.classList.remove("revealed", "wrong");
-        secondCard.classList.remove("revealed", "wrong");
-        firstCard.style.backgroundImage = `url('cards/back.png')`;
-        secondCard.style.backgroundImage = `url('cards/back.png')`;
-        firstCard = secondCard = null;
-        lockBoard = false;
-      }, 1000);
-    }
-  
-    updateStats();
-  }  
+        const endScreen = document.createElement("div");
+        endScreen.style.position = "fixed";
+        endScreen.style.top = "0";
+        endScreen.style.left = "0";
+        endScreen.style.width = "100vw";
+        endScreen.style.height = "100vh";
+        endScreen.style.backgroundColor = "white";
+        endScreen.style.display = "flex";
+        endScreen.style.flexDirection = "column";
+        endScreen.style.alignItems = "center";
+        endScreen.style.justifyContent = "center";
+        endScreen.style.textAlign = "center";
+        endScreen.style.zIndex = "999";
 
-board.addEventListener("click", e => {
+        const message = document.createElement("p");
+        message.textContent = t.finish;
+        message.style.fontSize = "2em";
+        message.style.marginBottom = "20px";
+
+        const button = document.createElement("button");
+        button.textContent = t.continue;
+        button.style.fontSize = "1.2em";
+        button.style.padding = "1em 2em";
+        button.style.borderRadius = "8px";
+        button.style.backgroundColor = "#007bff";
+        button.style.color = "white";
+        button.style.border = "none";
+        button.style.cursor = "pointer";
+
+        button.addEventListener("click", () => {
+          window.location.href = "../game3/index.html";
+        });
+
+        endScreen.appendChild(message);
+        endScreen.appendChild(button);
+        document.body.appendChild(endScreen);
+      }
+    }, 1000);
+  } else {
+    firstCard.classList.add("wrong");
+    secondCard.classList.add("wrong");
+    mistakes++;
+
+    setTimeout(() => {
+      firstCard.classList.remove("revealed", "wrong");
+      secondCard.classList.remove("revealed", "wrong");
+      firstCard.style.backgroundImage = `url('cards/back.png')`;
+      secondCard.style.backgroundImage = `url('cards/back.png')`;
+      firstCard = secondCard = null;
+      lockBoard = false;
+    }, 1000);
+  }
+
+  updateStats();
+}
+
+board.addEventListener("click", (e) => {
   const card = e.target;
   if (
     !card.classList.contains("card") ||
     card.classList.contains("revealed") ||
     !timerStart ||
     lockBoard
-  ) return;
-  
+  )
+    return;
 
   revealCard(card);
 
