@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="libs/chessboard.css" />
+  </head>
+  <body>
+    <div id="game" class="center">
+      <p id="chess-instructions"></p>
+      <button id="chess-start-btn"></button>
+    </div>
+
+    <div id="chess-setup" class="hidden center">
+      <p id="chess-setup-instructions"></p>
+      <label id="slider-label" class="big-label"></label>
+      <input type="range" id="difficulty-slider" min="0" max="20" value="5" />
+      <button id="start-slider-btn"></button>
+    </div>
+
+    <div id="chess-container" class="hidden">
+      <div id="turn-indicator"></div>
+      <div class="timer-row">
+        <div class="timer-box">
+          <div class="timer-label" id="player-label"></div>
+          <div class="timer" id="player-timer">05:00</div>
+        </div>
+        <div id="chess-board"></div>
+        <div class="timer-box">
+          <div class="timer-label" id="computer-label"></div>
+          <div class="timer" id="computer-timer">05:00</div>
+        </div>
+      </div>
+      <div id="check-warning" class="hidden"></div>
+      <button id="surrender-btn" class="surrender-btn hidden"></button>
+    </div>
+
+    <div id="post-game" class="hidden center">
+      <p id="post-game-text"></p>
+      <button id="post-game-btn"></button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="libs/chess.min.js"></script>
+    <script src="libs/chessboard.js"></script>
+    <script src="chess.js"></script>
+  </body>
+</html>
