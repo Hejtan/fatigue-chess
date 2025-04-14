@@ -38,7 +38,8 @@ function getSavedLanguage() {
 
 const lang = getSavedLanguage();
 const t = translations[lang];
-
+localStorage.setItem("stroop_results", "[]");
+localStorage.setItem("stroop_mistakes", "0");
 document.getElementById("instructions").textContent = t.instructions;
 document.getElementById("start-btn").textContent = t.start;
 
@@ -166,7 +167,7 @@ function endStroopTest() {
   btn.addEventListener("click", () => {
     localStorage.setItem("stroop_results", JSON.stringify(trials));
     localStorage.setItem("stroop_mistakes", mistakes);
-    window.location.href = "../game4/index.html";
+    window.location.href = "../winsconsin/index.html";
   });
 
   endScreen.appendChild(msg);

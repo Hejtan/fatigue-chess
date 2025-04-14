@@ -55,7 +55,10 @@
       <h1 id="title"></h1>
 
       <div class="test-block">
-        <button class="test-button" onclick="goToTest('test_fresh.html')">
+        <button
+          class="test-button"
+          onclick="goToTest('minigames/london/index.html')"
+        >
           🟢 <span id="btn-fresh"></span>
         </button>
       </div>
@@ -128,6 +131,7 @@
       });
 
       function goToTest(url) {
+        localStorage.setItem("test_mode", "fresh");
         window.location.href = url;
       }
 
@@ -137,7 +141,12 @@
           alert(t.missingCode);
           return;
         }
-        window.location.href = `${url}?code=${encodeURIComponent(code)}`;
+        localStorage.setItem(
+          "test_mode",
+          codeInputId === "code1" ? "tired1" : "tired2"
+        );
+        localStorage.setItem("participant_code", code);
+        window.location.href = `${url}`;
       }
     </script>
   </body>

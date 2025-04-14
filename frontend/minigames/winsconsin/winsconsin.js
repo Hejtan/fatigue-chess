@@ -44,6 +44,7 @@ let currentRule = ruleSequence[ruleIndex];
 const results = [];
 const lang = getSavedLanguage();
 const t = translations[lang];
+localStorage.setItem("winsconsin_results", "[]");
 let currentCardIndex = 0;
 let currentCard = null;
 let cardStartTime = null;
@@ -149,10 +150,16 @@ function handlePileClick(e) {
       currentRule = ruleSequence[ruleIndex % ruleSequence.length];
       correctInARow = 0;
       result.ruleChanged = true;
+      result.newRuleIndex = currentCardIndex + 1; // will take effect next card
     }
   } else {
+    const recentCorrect = results
+      .slice(-2)
+      .filter(
+        (r) => r.ruleChanged || r.errorType === "rule-change-expected"
+      ).length;
     result.errorType =
-      correctInARow === 0 ? "rule-change-expected" : "unexpected";
+      recentCorrect < 2 ? "rule-change-expected" : "unexpected";
     correctInARow = 0;
   }
 
@@ -196,6 +203,6 @@ function endTest() {
   localStorage.setItem("winsconsin_results", JSON.stringify(results));
 
   button.addEventListener("click", () => {
-    window.location.href = "../finish/index.html";
+    window.location.href = "../../chess/index.html";
   });
 }

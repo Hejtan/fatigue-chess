@@ -17,6 +17,10 @@ const translations = {
     youSurrendered: "You surrendered.",
     nextGame: "Play next game",
     continue: "Continue",
+    gameWin: "Checkmate! You win!",
+    gameLoss: "Checkmate! You lose.",
+    gameDraw: "It's a draw.",
+    gameOver: "Game over",
   },
   pl: {
     instructions:
@@ -36,13 +40,17 @@ const translations = {
     youSurrendered: "Poddajesz się.",
     nextGame: "Zagraj kolejną partię",
     continue: "Kontynuuj",
+    gameWin: "Szach mat! Wygrałeś.",
+    gameLoss: "Szach mat! Przegrałeś.",
+    gameDraw: "Remis.",
+    gameOver: "Koniec gry",
   },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   const lang = document.cookie.match(/(?:^|; )lang=([^;]+)/)?.[1] || "en";
   const t = translations[lang];
-
+  localStorage.setItem("chess_results", "[]");
   let board;
   let game;
   let playerTime;
@@ -125,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("surrender-btn").classList.remove("hidden");
     document.getElementById("surrender-btn").onclick = () => {
       if (confirm(t.confirmSurrender)) {
-        endGame(t.youSurrendered);
+        endGame(t.youSurrendered, "loss");
       }
     };
 
@@ -199,11 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
       turn === "player" ? t.playerTurn : t.computerTurn;
     if (game.in_checkmate())
       return endGame(
-        turn === "player" ? "Checkmate! You lose." : "Checkmate! You win!"
+        turn === "player" ? t.gameLoss : t.gameWin,
+        turn === "player" ? "loss" : "win"
       );
-    if (game.in_stalemate()) return endGame("Stalemate. It's a draw.");
-    if (game.in_draw()) return endGame("Draw.");
-
+    if (game.in_stalemate()) return endGame(t.gameDraw, "draw");
+    if (game.in_draw()) return endGame(t.gameDraw, "draw");
     const warning = document.getElementById("check-warning");
     if (game.in_check()) {
       warning.textContent =
@@ -232,17 +240,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function endGame(message) {
+  function endGame(message, outcome = "draw") {
     clearInterval(gameInterval);
     document.getElementById("chess-container").classList.add("hidden");
     document.getElementById("surrender-btn").classList.add("hidden");
     document.getElementById("check-warning").classList.add("hidden");
 
+    // Save current game result
+    const history = game.history({ verbose: true }) || [];
+    const moves = history.map((m) => ({
+      from: m.from,
+      to: m.to,
+      promotion: m.promotion || null,
+      color: m.color,
+      piece: m.piece,
+      san: m.san,
+    }));
+    const result = {
+      game: gameCount,
+      winner: message.includes("win")
+        ? "player"
+        : message.includes("lose")
+        ? "computer"
+        : "draw",
+      moves: moves,
+    };
+
+    // Show postgame screen
     const postGame = document.getElementById("post-game");
     postGame.classList.remove("hidden");
 
     const text = document.getElementById("post-game-text");
     const button = document.getElementById("post-game-btn");
+
+    const chessResults = JSON.parse(
+      localStorage.getItem("chess_results") || "[]"
+    );
+    chessResults.push({
+      game: gameCount,
+      result: outcome,
+      difficulty: parseInt(localStorage.getItem("chess_difficulty") || "0"),
+      moves: history.map((m) => ({
+        from: m.from,
+        to: m.to,
+        promotion: m.promotion || null,
+        color: m.color,
+        piece: m.piece,
+        san: m.san,
+      })),
+    });
+    localStorage.setItem("chess_results", JSON.stringify(chessResults));
+
     text.textContent = message;
     if (gameCount < 3) {
       button.textContent = t.nextGame;
@@ -253,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       button.textContent = t.continue;
       button.onclick = () => {
-        window.location.href = "../nextpage/index.html";
+        window.location.href = "../survey/index.html";
       };
     }
   }
@@ -270,7 +318,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function makeComputerMove() {
-    if (game.game_over()) return endGame("Game over");
+    if (game.game_over()) {
+      // The game should already have been handled in setTurn
+      return;
+    }
+
     const history = game.history({ verbose: true }) || [];
     const moves = history
       .map((m) => m.from + m.to + (m.promotion || ""))

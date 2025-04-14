@@ -9,6 +9,8 @@ const translations = {
       "Your participant code has been generated. Please save it somewhere safe!",
     submit: "Submit",
     thankYou: "Thank you! Your answers have been recorded.",
+    reminder:
+      "Please remember to return and perform the test again after a mentally exhausting day.",
 
     q1: "How do you feel?",
     q1o1: "Very tired",
@@ -50,6 +52,7 @@ const translations = {
       "Twój kod uczestnika został wygenerowany. Zapisz go w bezpiecznym miejscu!",
     submit: "Wyślij",
     thankYou: "Dziękujemy! Twoje odpowiedzi zostały zapisane.",
+    reminder: "Pamiętaj, aby wrócić i wykonać test ponownie po męczącym dniu.",
 
     q1: "Jak się teraz czujesz?",
     q1o1: "Bardzo zmęczony/a",
@@ -167,16 +170,54 @@ function showSurvey() {
 }
 
 document.getElementById("submit-btn").addEventListener("click", () => {
-  const results = {};
+  const surveyResults = {};
+  let incomplete = false;
+
   questions.forEach(([qKey]) => {
     const selected = form.querySelector(`input[name="${qKey}"]:checked`);
-    results[qKey] = selected ? selected.value : null;
+    if (!selected) incomplete = true;
+    surveyResults[qKey] = selected ? selected.value : null;
   });
 
-  results.participantCode = participantCode;
+  if (incomplete) {
+    alert(
+      lang === "pl"
+        ? "Proszę odpowiedzieć na wszystkie pytania."
+        : "Please answer all questions before submitting."
+    );
+    return;
+  }
 
-  console.log("Survey results:", results);
-  alert(t.thankYou);
+  const finalResults = {
+    participantCode: participantCode,
+    survey: surveyResults,
+    towerOfLondon: JSON.parse(localStorage.getItem("london_results") || "[]"),
+    matchPairs: {
+      time: parseInt(localStorage.getItem("matchpairs_time")),
+      mistakes: parseInt(localStorage.getItem("matchpairs_mistakes")),
+    },
+    stroop: {
+      trials: JSON.parse(localStorage.getItem("stroop_results") || "[]"),
+      mistakes: parseInt(localStorage.getItem("stroop_mistakes")),
+    },
+    winsconsin: JSON.parse(localStorage.getItem("winsconsin_results") || "[]"),
+    chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
+  };
+
+  console.log("Complete results:", finalResults);
+
+  const submitBtn = document.getElementById("submit-btn");
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = "0.5";
+  submitBtn.style.cursor = "not-allowed";
+
+  const message = document.createElement("p");
+  message.style.marginTop = "2em";
+  message.style.fontSize = "1.2em";
+  message.style.fontWeight = "bold";
+  message.textContent = `${t.thankYou} ${t.reminder}`;
+
+  document.querySelector(".container").appendChild(message);
 });
 
 // --- Utils ---

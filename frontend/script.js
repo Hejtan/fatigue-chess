@@ -8,7 +8,7 @@ const translations = {
     description3:
       "You will be asked to go through a series of tests twice: once while rested, and once after a mentally exhausting day at work. In May, I will also ask you to complete the tests a third time, again after a tiring day.",
     description4:
-      "The tests will consist of 5 minigames, 3 rapid chess games (10 minutes per game) with a computer and a survey. The first test will be in a rested state.",
+      "The tests will consist of 5 minigames, 3 rapid chess games (5 minutes per game) with a computer and a survey. The first test will be in a rested state.",
     question: "Do you know how to play chess and would like to participate?",
     participate: "I want to participate",
   },
@@ -21,7 +21,7 @@ const translations = {
     description3:
       "Uczestnicy zostaną poproszeni o wykonanie serii testów dwukrotnie: raz w stanie wypoczętym oraz raz po mentalnie wyczerpującym dniu pracy. W Maju poproszę również o trzecie przejście testów, również po męczącym dniu.",
     description4:
-      "Testy będą składać się z 5 minigier, trzech partii szachów błyskawicznych (po 10 minut na gracza) i ankiety. Pierwszy test będzie w stanie wypoczętym.",
+      "Testy będą składać się z 5 minigier, trzech partii szachów błyskawicznych (po 5 minut na gracza) i ankiety. Pierwszy test będzie w stanie wypoczętym.",
     question: "Czy umiesz grać w szachy i chciał(a)byś wziąć udział?",
     participate: "Chcę wziąć udział",
   },

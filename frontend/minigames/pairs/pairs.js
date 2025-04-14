@@ -28,6 +28,8 @@ function getSavedLanguage() {
 
 const lang = getSavedLanguage();
 const t = translations[lang];
+localStorage.setItem("matchpairs_time", "0");
+localStorage.setItem("matchpairs_mistakes", "0");
 const game = document.getElementById("game");
 const instructions = document.getElementById("instructions");
 const startBtn = document.getElementById("start-btn");
@@ -154,7 +156,7 @@ function checkMatch() {
         button.style.cursor = "pointer";
 
         button.addEventListener("click", () => {
-          window.location.href = "../game3/index.html";
+          window.location.href = "../stroop/index.html";
         });
 
         endScreen.appendChild(message);

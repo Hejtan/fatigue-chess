@@ -32,6 +32,7 @@ function getSavedLanguage() {
 
 const lang = getSavedLanguage();
 const t = translations[lang];
+localStorage.setItem("london_results", "[]");
 let heldBall = null;
 let moveCount = 0;
 let moveCounterDisplay;
@@ -235,7 +236,7 @@ function endPuzzle() {
   } else {
     button.textContent = t.continue;
     button.addEventListener("click", () => {
-      window.location.href = "../game5/index.html";
+      window.location.href = "../reflex/index.html";
     });
   }
 

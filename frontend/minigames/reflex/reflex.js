@@ -28,7 +28,7 @@ function getSavedLanguage() {
 
 const lang = getSavedLanguage();
 const t = translations[lang];
-
+localStorage.setItem("reflex_results", "[]");
 const gameDiv = document.getElementById("game");
 const instructionsP = document.getElementById("instructions");
 const startBtn = document.getElementById("start-btn");
@@ -67,7 +67,7 @@ function handleClick() {
       "click",
       () => {
         localStorage.setItem("reflex_results", JSON.stringify(results));
-        window.location.href = "../game2/index.html";
+        window.location.href = "../pairs/index.html";
       },
       { once: true }
     );
