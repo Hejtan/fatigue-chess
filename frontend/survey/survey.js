@@ -1,3 +1,5 @@
+const BACKEND_URL = "https://fatigue-backend.onrender.com";
+
 const translations = {
   en: {
     surveyIntro:
@@ -11,6 +13,8 @@ const translations = {
     thankYou: "Thank you! Your answers have been recorded.",
     reminder:
       "Please remember to return and perform the test again after a mentally exhausting day.",
+    errorGeneric: "Something went wrong. Please try again.",
+    errorConnection: "Failed to connect to server.",
 
     q1: "How do you feel?",
     q1o1: "Very tired",
@@ -53,6 +57,8 @@ const translations = {
     submit: "Wyślij",
     thankYou: "Dziękujemy! Twoje odpowiedzi zostały zapisane.",
     reminder: "Pamiętaj, aby wrócić i wykonać test ponownie po męczącym dniu.",
+    errorGeneric: "Wystąpił błąd. Spróbuj ponownie.",
+    errorConnection: "Nie udało się połączyć z serwerem.",
 
     q1: "Jak się teraz czujesz?",
     q1o1: "Bardzo zmęczony/a",
@@ -204,7 +210,41 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
   };
 
-  console.log("Complete results:", finalResults);
+  const endpoint =
+    mode === "rested"
+      ? "/submit/rested"
+      : mode === "tired1"
+      ? "/submit/tired1"
+      : "/submit/tired2";
+
+  fetch(`${BACKEND_URL}${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(finalResults),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "ok") {
+        const submitBtn = document.getElementById("submit-btn");
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.5";
+        submitBtn.style.cursor = "not-allowed";
+
+        const message = document.createElement("p");
+        message.style.marginTop = "2em";
+        message.style.fontSize = "1.2em";
+        message.style.fontWeight = "bold";
+        message.textContent = `${t.thankYou} ${t.reminder}`;
+        document.querySelector(".container").appendChild(message);
+      } else {
+        alert(t.errorGeneric || "Something went wrong. Please try again.");
+      }
+    })
+    .catch(() => {
+      alert(t.errorConnection || "Failed to connect to server.");
+    });
 
   const submitBtn = document.getElementById("submit-btn");
   submitBtn.disabled = true;
@@ -226,7 +266,8 @@ function generateCode() {
 }
 
 function verifyCode(code) {
-  // Replace with backend call if needed
-  const mockDB = ["C12345678", "C87654321", "CABCDEFG"];
-  return Promise.resolve(mockDB.includes(code));
+  return fetch(`${BACKEND_URL}/check?code=${encodeURIComponent(code)}`)
+    .then((res) => res.json())
+    .then((data) => data.exists)
+    .catch(() => false);
 }

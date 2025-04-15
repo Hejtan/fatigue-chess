@@ -100,6 +100,8 @@
           note: "This option will be available in May.",
           missingCode: "Please enter your participant code.",
           placehold: "Code",
+          codeInvalidOrUsed: "Code not found or test already completed.",
+          errorConnection: "Network error. Please try again.",
         },
         pl: {
           title: "Wybierz sesję testową",
@@ -109,6 +111,9 @@
           note: "Ta opcja będzie dostępna w maju.",
           missingCode: "Proszę podać kod uczestnika.",
           placehold: "Kod",
+          codeInvalidOrUsed:
+            "Kod nie został znaleziony lub test już został wykonany.",
+          errorConnection: "Błąd połączenia z siecią. Spróbuj ponownie.",
         },
       };
 
@@ -135,18 +140,45 @@
         window.location.href = url;
       }
 
-      function goToTestWithCode(url, codeInputId) {
+      const BACKEND_URL = "https://fatigue-backend.onrender.com";
+
+      async function checkCodeValidity(code, tiredLevel) {
+        try {
+          const res = await fetch(
+            `${BACKEND_URL}/check?code=${encodeURIComponent(code)}`
+          );
+          const data = await res.json();
+
+          if (tiredLevel === "tired1") {
+            return data.in_rested && !data.in_tired1;
+          } else if (tiredLevel === "tired2") {
+            return data.in_rested && data.in_tired1 && !data.in_tired2;
+          }
+          return false;
+        } catch (err) {
+          alert(t.errorConnection);
+          return false;
+        }
+      }
+
+      async function goToTestWithCode(url, codeInputId) {
         const code = document.getElementById(codeInputId).value.trim();
         if (!code) {
           alert(t.missingCode);
           return;
         }
-        localStorage.setItem(
-          "test_mode",
-          codeInputId === "code1" ? "tired1" : "tired2"
-        );
+
+        const tiredLevel = codeInputId === "code1" ? "tired1" : "tired2";
+        const valid = await checkCodeValidity(code, tiredLevel);
+
+        if (!valid) {
+          alert(t.codeInvalidOrUsed);
+          return;
+        }
+
+        localStorage.setItem("test_mode", tiredLevel);
         localStorage.setItem("participant_code", code);
-        window.location.href = `${url}`;
+        window.location.href = url;
       }
     </script>
   </body>
