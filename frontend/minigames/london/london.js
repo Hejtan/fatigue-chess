@@ -49,7 +49,7 @@ document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById("start-btn").remove();
   document.getElementById("board").classList.remove("hidden");
 
-  const stage = getTestStage();
+  const stage = localStorage.getItem("test_mode");
   if (stage === "relaxed") puzzleIndices = [0, 1];
   else if (stage === "tired1") puzzleIndices = [2, 3];
   else if (stage === "tired2") puzzleIndices = [4, 5];
@@ -86,11 +86,6 @@ const puzzles = [
     goal: [[5, 4], [3], [2, 1]],
   },
 ];
-
-function getTestStage() {
-  const match = document.cookie.match(/(?:^|; )stage=([^;]+)/);
-  return match ? match[1] : "relaxed"; // default fallback
-}
 
 function loadPuzzle(puzzle) {
   moveCount = 0;
