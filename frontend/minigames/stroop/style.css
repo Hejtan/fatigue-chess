@@ -1,0 +1,60 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  background-color: white;
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#instructions {
+  font-size: 1.5em;
+  margin-bottom: 1rem;
+}
+
+#start-btn {
+  font-size: 1.2em;
+  padding: 1em 2em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#stroop-word {
+  font-size: 3em;
+  margin: 1em 0;
+}
+
+#color-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+}
+
+#color-buttons button {
+  font-size: 1.2em;
+  padding: 1em 2em;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+#stroop-counters {
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Survey</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <p id="survey-intro"></p>
+
+      <!-- Tired test: code entry -->
+      <div id="code-entry" class="hidden">
+        <label for="participant-code-input" id="code-entry-label"></label>
+        <input type="text" id="participant-code-input" />
+        <button id="verify-code-btn"></button>
+      </div>
+
+      <!-- Rested test: show generated code -->
+      <div id="generated-code-container" class="hidden">
+        <p id="generated-code-label"></p>
+        <p id="generated-code-display" class="code-box"></p>
+      </div>
+
+      <!-- Survey form -->
+      <form id="survey-form" class="hidden"></form>
+      <button id="submit-btn" class="hidden"></button>
+    </div>
+
+    <script src="survey.js"></script>
+  </body>
+</html>
