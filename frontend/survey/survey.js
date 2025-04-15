@@ -127,7 +127,7 @@ if (mode === "rested") {
 }
 
 // -------- TIRED --------
-else if (mode === "tired") {
+else if (mode === "tired1" || mode === "tired2") {
   document.getElementById("code-entry").classList.remove("hidden");
   document.getElementById("code-entry-label").textContent = t.enterCode;
   document.getElementById("verify-code-btn").textContent = t.verify;
