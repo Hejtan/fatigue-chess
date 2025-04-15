@@ -95,8 +95,7 @@ const translations = {
 const lang = document.cookie.match(/(?:^|; )lang=([^;]+)/)?.[1] || "en";
 const t = translations[lang];
 
-const urlParams = new URLSearchParams(window.location.search);
-const mode = urlParams.get("mode") || "rested";
+const mode = localStorage.getItem("test_mode") || "rested";
 let participantCode = "";
 
 document.getElementById("survey-intro").textContent = t.surveyIntro;
@@ -268,6 +267,13 @@ function generateCode() {
 function verifyCode(code) {
   return fetch(`${BACKEND_URL}/check?code=${encodeURIComponent(code)}`)
     .then((res) => res.json())
-    .then((data) => data.exists)
+    .then((data) => {
+      if (mode === "tired1") {
+        return data.in_rested && !data.in_tired1;
+      } else if (mode === "tired2") {
+        return data.in_rested && data.in_tired1 && !data.in_tired2;
+      }
+      return false;
+    })
     .catch(() => false);
 }
