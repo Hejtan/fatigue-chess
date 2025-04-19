@@ -16,35 +16,54 @@ const translations = {
     errorGeneric: "Something went wrong. Please try again.",
     errorConnection: "Failed to connect to server.",
 
-    q1: "How do you feel?",
-    q1o1: "Very tired",
-    q1o2: "Tired",
-    q1o3: "Okay",
-    q1o4: "Rested",
-    q1o5: "Very rested",
+    q0: "What is your gender?",
+    q0o1: "Male",
+    q0o2: "Female",
+    q0o3: "Other",
+    q0o4: "Prefer not to say",
 
-    q2: "What is your chess experience?",
-    q2o1: "I know the rules",
-    q2o2: "I've played a few times",
-    q2o3: "I play regularly",
-    q2o4: "I play in tournaments",
-    q2o5: "I'm a professional chess player",
+    q1: "What is your age group?",
+    q1o1: "Under 18",
+    q1o2: "18–24",
+    q1o3: "25–34",
+    q1o4: "35–44",
+    q1o5: "45 and above",
 
-    q3: "Was the difficulty of the first game appropriate?",
-    q4: "Was the difficulty of the second game appropriate?",
-    q5: "Was the difficulty of the third game appropriate?",
-    q3o1: "Too easy",
-    q3o2: "Just right",
-    q3o3: "Too hard",
+    q2: "What is your experience with computer games?",
+    q2o1: "None",
+    q2o2: "Occasionally",
+    q2o3: "Regularly",
+    q2o4: "Expert level",
 
-    q6: "How satisfying was the first game?",
-    q7: "How satisfying was the second game?",
-    q8: "How satisfying was the third game?",
-    q6o1: "Very unsatisfying",
-    q6o2: "Unsatisfying",
-    q6o3: "Neutral",
-    q6o4: "Satisfying",
-    q6o5: "Very satisfying",
+    q3: "How do you feel?",
+    q3o1: "Very tired",
+    q3o2: "Tired",
+    q3o3: "Okay",
+    q3o4: "Rested",
+    q3o5: "Very rested",
+
+    q4: "What is your chess experience?",
+    q4o1: "I know the rules",
+    q4o2: "I've played a few times",
+    q4o3: "I play regularly",
+    q4o4: "I play in tournaments",
+    q4o5: "I'm a professional chess player",
+
+    q5: "Was the difficulty of the first game appropriate?",
+    q6: "Was the difficulty of the second game appropriate?",
+    q7: "Was the difficulty of the third game appropriate?",
+    q5o1: "Too easy",
+    q5o2: "Just right",
+    q5o3: "Too hard",
+
+    q8: "How satisfying was the first game?",
+    q9: "How satisfying was the second game?",
+    q10: "How satisfying was the third game?",
+    q8o1: "Very unsatisfying",
+    q8o2: "Unsatisfying",
+    q8o3: "Neutral",
+    q8o4: "Satisfying",
+    q8o5: "Very satisfying",
   },
   pl: {
     surveyIntro:
@@ -60,35 +79,54 @@ const translations = {
     errorGeneric: "Wystąpił błąd. Spróbuj ponownie.",
     errorConnection: "Nie udało się połączyć z serwerem.",
 
-    q1: "Jak się teraz czujesz?",
-    q1o1: "Bardzo zmęczony/a",
-    q1o2: "Zmęczony/a",
-    q1o3: "W porządku",
-    q1o4: "Wypoczęty/a",
-    q1o5: "Bardzo wypoczęty/a",
+    q0: "Jaka jest Twoja płeć?",
+    q0o1: "Mężczyzna",
+    q0o2: "Kobieta",
+    q0o3: "Inna",
+    q0o4: "Wolę nie mówić",
 
-    q2: "Jak oceniasz swoje doświadczenie szachowe?",
-    q2o1: "Znam zasady",
-    q2o2: "Grałem/am kilka razy",
-    q2o3: "Gram regularnie",
-    q2o4: "Gram w turniejach",
-    q2o5: "Jestem zawodowym szachistą / szachistką",
+    q1: "Jaki jest Twój przedział wiekowy?",
+    q1o1: "Poniżej 18 lat",
+    q1o2: "18–24 lata",
+    q1o3: "25–34 lata",
+    q1o4: "35–44 lata",
+    q1o5: "45 lat lub więcej",
 
-    q3: "Czy poziom trudności pierwszej partii był odpowiedni?",
-    q4: "Czy poziom trudności drugiej partii był odpowiedni?",
-    q5: "Czy poziom trudności trzeciej partii był odpowiedni?",
-    q3o1: "Za łatwy",
-    q3o2: "Odpowiedni",
-    q3o3: "Za trudny",
+    q2: "Jakie masz doświadczenie z grami komputerowymi?",
+    q2o1: "Brak",
+    q2o2: "Okazjonalne",
+    q2o3: "Regularne",
+    q2o4: "Poziom eksperta",
 
-    q6: "Jak satysfakcjonująca była pierwsza partia?",
-    q7: "Jak satysfakcjonująca była druga partia?",
-    q8: "Jak satysfakcjonująca była trzecia partia?",
-    q6o1: "Bardzo niesatysfakcjonująca",
-    q6o2: "Niesatysfakcjonująca",
-    q6o3: "Neutralna",
-    q6o4: "Satysfakcjonująca",
-    q6o5: "Bardzo satysfakcjonująca",
+    q3: "Jak się teraz czujesz?",
+    q3o1: "Bardzo zmęczony/a",
+    q3o2: "Zmęczony/a",
+    q3o3: "W porządku",
+    q3o4: "Wypoczęty/a",
+    q3o5: "Bardzo wypoczęty/a",
+
+    q4: "Jak oceniasz swoje doświadczenie szachowe?",
+    q4o1: "Znam zasady",
+    q4o2: "Grałem/am kilka razy",
+    q4o3: "Gram regularnie",
+    q4o4: "Gram w turniejach",
+    q4o5: "Jestem zawodowym szachistą / szachistką",
+
+    q5: "Czy poziom trudności pierwszej partii był odpowiedni?",
+    q6: "Czy poziom trudności drugiej partii był odpowiedni?",
+    q7: "Czy poziom trudności trzeciej partii był odpowiedni?",
+    q5o1: "Za łatwy",
+    q5o2: "Odpowiedni",
+    q5o3: "Za trudny",
+
+    q8: "Jak satysfakcjonująca była pierwsza partia?",
+    q9: "Jak satysfakcjonująca była druga partia?",
+    q10: "Jak satysfakcjonująca była trzecia partia?",
+    q8o1: "Bardzo niesatysfakcjonująca",
+    q8o2: "Niesatysfakcjonująca",
+    q8o3: "Neutralna",
+    q8o4: "Satysfakcjonująca",
+    q8o5: "Bardzo satysfakcjonująca",
   },
 };
 
@@ -102,19 +140,21 @@ document.getElementById("survey-intro").textContent = t.surveyIntro;
 document.getElementById("submit-btn").textContent = t.submit;
 
 const questions = [
+  ["q0", ["q0o1", "q0o2", "q0o3", "q0o4"]],
   ["q1", ["q1o1", "q1o2", "q1o3", "q1o4", "q1o5"]],
-  ["q2", ["q2o1", "q2o2", "q2o3", "q2o4", "q2o5"]],
-  ["q3", ["q3o1", "q3o2", "q3o3"]],
-  ["q4", ["q3o1", "q3o2", "q3o3"]],
-  ["q5", ["q3o1", "q3o2", "q3o3"]],
-  ["q6", ["q6o1", "q6o2", "q6o3", "q6o4", "q6o5"]],
-  ["q7", ["q6o1", "q6o2", "q6o3", "q6o4", "q6o5"]],
-  ["q8", ["q6o1", "q6o2", "q6o3", "q6o4", "q6o5"]],
+  ["q2", ["q2o1", "q2o2", "q2o3", "q2o4"]],
+  ["q3", ["q3o1", "q3o2", "q3o3", "q3o4", "q3o5"]],
+  ["q4", ["q4o1", "q4o2", "q4o3", "q4o4", "q4o5"]],
+  ["q5", ["q5o1", "q5o2", "q5o3"]],
+  ["q6", ["q5o1", "q5o2", "q5o3"]],
+  ["q7", ["q5o1", "q5o2", "q5o3"]],
+  ["q8", ["q8o1", "q8o2", "q8o3", "q8o4", "q8o5"]],
+  ["q9", ["q8o1", "q8o2", "q8o3", "q8o4", "q8o5"]],
+  ["q10", ["q8o1", "q8o2", "q8o3", "q8o4", "q8o5"]],
 ];
 
 const form = document.getElementById("survey-form");
 
-// -------- RESTED --------
 if (mode === "rested") {
   participantCode = generateCode();
   document
@@ -124,10 +164,7 @@ if (mode === "rested") {
   document.getElementById("generated-code-display").textContent =
     participantCode;
   showSurvey();
-}
-
-// -------- TIRED --------
-else if (mode === "tired1" || mode === "tired2") {
+} else if (mode === "tired1" || mode === "tired2") {
   document.getElementById("code-entry").classList.remove("hidden");
   document.getElementById("code-entry-label").textContent = t.enterCode;
   document.getElementById("verify-code-btn").textContent = t.verify;
@@ -244,22 +281,8 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     .catch(() => {
       alert(t.errorConnection || "Failed to connect to server.");
     });
-
-  const submitBtn = document.getElementById("submit-btn");
-  submitBtn.disabled = true;
-  submitBtn.style.opacity = "0.5";
-  submitBtn.style.cursor = "not-allowed";
-
-  const message = document.createElement("p");
-  message.style.marginTop = "2em";
-  message.style.fontSize = "1.2em";
-  message.style.fontWeight = "bold";
-  message.textContent = `${t.thankYou} ${t.reminder}`;
-
-  document.querySelector(".container").appendChild(message);
 });
 
-// --- Utils ---
 function generateCode() {
   return "C" + Math.random().toString(36).substr(2, 8).toUpperCase();
 }
