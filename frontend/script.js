@@ -9,6 +9,8 @@ const translations = {
       "You will be asked to go through a series of tests twice: once while rested, and once after a mentally exhausting day at work. In May, I will also ask you to complete the tests a third time, again after a tiring day.",
     description4:
       "The tests will consist of 5 minigames, 3 rapid chess games (5 minutes per game) with a computer and a survey. The first test will be in a rested state.",
+    description5:
+      "As part of this study, only data related to participants’ performance in the tests (e.g., reaction times, number of errors, number of moves in the game, etc.) and answers to the final questionnaire will be collected. All data is completely anonymous – participants are identified solely by a randomly generated code that does not allow for personal identification",
     question: "Do you know how to play chess and would like to participate?",
     participate: "I want to participate",
   },
@@ -22,6 +24,8 @@ const translations = {
       "Uczestnicy zostaną poproszeni o wykonanie serii testów dwukrotnie: raz w stanie wypoczętym oraz raz po mentalnie wyczerpującym dniu pracy. W Maju poproszę również o trzecie przejście testów, również po męczącym dniu.",
     description4:
       "Testy będą składać się z 5 minigier, trzech partii szachów błyskawicznych (po 5 minut na gracza) i ankiety. Pierwszy test będzie w stanie wypoczętym.",
+    description5:
+      "W ramach niniejszego badania zbierane będą wyłącznie dane dotyczące wyników uzyskanych przez uczestników w trakcie wykonywania testów (np. czas reakcji, liczba błędów, liczba ruchów w grze, itp.) oraz odpowiedzi udzielonych w ankiecie końcowej. Dane te są całkowicie anonimowe – uczestnicy są identyfikowani jedynie na podstawie losowo wygenerowanego kodu, który nie pozwala na ustalenie tożsamości żadnej osoby.",
     question: "Czy umiesz grać w szachy i chciał(a)byś wziąć udział?",
     participate: "Chcę wziąć udział",
   },
@@ -42,6 +46,7 @@ function setLanguage(lang) {
         <p>${t.description2}</p>
         <p>${t.description3}</p>
         <p>${t.description4}</p>
+        <p>${t.description5}</p>
         <p><strong>${t.question}</strong></p>
         <a href="mainmenu.html" class="participate-button">${t.participate}</a>
     `;
