@@ -1,8 +1,15 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+import joblib
+import pymc as pm
+import arviz as az
+import numpy as np
+import pandas as pd
+import pickle
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -22,6 +29,15 @@ db = client["fatigue"]
 rested = db["rested"]
 tired1 = db["tired1"]
 tired2 = db["tired2"]
+
+model = az.from_netcdf("satisfaction_model.netcdf")
+scaler = joblib.load("satisfaction_scaler.pkl")
+
+with pm.Model() as pm_model:
+    pm_model = model
+
+with open("participant_mapping.pkl", "rb") as f:
+    participant_mapping = pickle.load(f)
 
 @app.get("/")
 async def root():
@@ -100,3 +116,79 @@ async def submit_tired2(request: Request):
     tired2.insert_one(data)
     return {"status": "ok"}
 
+
+class PredictionRequest(BaseModel):
+    participantCode: str | None = None
+    difficulty: int
+    wisc_correct_rt: float
+    wisc_incorrect_rt: float
+    state: str
+
+@app.post("/predict_difficulty_adjustment")
+async def predict_difficulty_adjustment(data: dict = Body()):
+    participant_code = data.get("participantCode")
+    difficulty = data.get("actualDifficulty")
+    wisc_correct_rt = data.get("wiscCorrectRT")
+    wisc_incorrect_rt = data.get("wiscIncorrectRT")
+
+    # Validate required fields
+    if None in [difficulty, wisc_correct_rt, wisc_incorrect_rt]:
+        return {"error": "Missing one or more required fields"}
+
+    # Prepare list of difficulties to test
+    difficulties_to_try = [difficulty - 2, difficulty - 1, difficulty, difficulty + 1, difficulty + 2]
+
+    # Determine participant index (used in hierarchical model) or fallback to -1
+    if participant_code and participant_code in participant_mapping:
+        participant_idx = participant_mapping[participant_code]
+        use_alpha = "participant"
+    else:
+        participant_idx = -1
+        use_alpha = "global"
+    
+    # Extract samples from model trace
+    mu_alpha = model.posterior["mu_alpha"].values.flatten()
+    sigma_alpha = model.posterior["sigma_alpha"].values.flatten()
+    alpha_samples = model.posterior["alpha"].values  # shape: (chains, draws, participants)
+    beta_difficulty = model.posterior["beta_difficulty"].values.flatten()
+    beta_fatigue = model.posterior["beta_fatigue"].values.flatten()
+    beta_wisc_correct = model.posterior["beta_wisc_correct"].values.flatten()
+    beta_wisc_incorrect = model.posterior["beta_wisc_incorrect"].values.flatten()
+
+    # Use mean fatigue of 1 (tired) for prediction
+    fatigue = 1
+
+    # Prepare predictions
+    predictions = []
+    for d in difficulties_to_try:
+        # Standardize input like in training
+        input_array = np.array([[d, wisc_correct_rt, wisc_incorrect_rt]])
+        scaled_input = scaler.transform(input_array).flatten()
+
+        diff, wisc_c_std, wisc_i_std = scaled_input
+
+        # Select alpha
+        if use_alpha == "participant":
+            alpha = alpha_samples[:, :, participant_idx].flatten()
+        else:
+            alpha = mu_alpha
+
+        # Compute predicted satisfaction samples
+        sat_samples = (
+            alpha
+            + beta_wisc_correct * wisc_c_std
+            + beta_wisc_incorrect * wisc_i_std
+            + beta_difficulty * diff
+            + beta_fatigue * fatigue
+        )
+
+        mean_satisfaction = np.mean(sat_samples)
+        predictions.append((d, mean_satisfaction))
+
+    # Choose best difficulty
+    best_difficulty, best_satisfaction = max(predictions, key=lambda x: x[1])
+
+    return {
+        "predicted_satisfaction": {str(d): round(sat, 3) for d, sat in predictions},
+        "suggested_difficulty": best_difficulty
+    }

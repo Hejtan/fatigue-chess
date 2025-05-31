@@ -2,3 +2,9 @@ fastapi
 uvicorn
 pymongo
 python-dotenv
+scikit-learn
+pymc
+arviz
+numpy
+pandas
+pickle
