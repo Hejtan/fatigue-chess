@@ -128,9 +128,9 @@ class PredictionRequest(BaseModel):
 async def predict_difficulty_adjustment(data: dict = Body()):
     print("##########\nPOST received with data:", data)
     print("##########\n")
-    participant_code = data.get("participantCode")
-    difficulty = data.get("actualDifficulty")
-    wisconsin_results = data.get("wisconsinResults")
+    participant_code = data.get("participant_code")
+    difficulty = data.get("difficulty")
+    wisconsin_results = data.get("winsconsin_results")
 
     if difficulty is None or not wisconsin_results:
         return {"error": "Missing difficulty or Wisconsin results"}
