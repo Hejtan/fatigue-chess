@@ -126,6 +126,8 @@ class PredictionRequest(BaseModel):
 
 @app.post("/predict_difficulty_adjustment")
 async def predict_difficulty_adjustment(data: dict = Body()):
+    print("##########\nPOST received with data:", data)
+    print("##########\n")
     participant_code = data.get("participantCode")
     difficulty = data.get("actualDifficulty")
     wisconsin_results = data.get("wisconsinResults")
@@ -195,6 +197,10 @@ async def predict_difficulty_adjustment(data: dict = Body()):
         predictions.append((d, np.mean(sat_samples)))
 
     best_difficulty, _ = max(predictions, key=lambda x: x[1])
+    print("#########\n")
+    print("Best difficulty found:", best_difficulty)
+    print("Predictions:", predictions)
+    print("#########\n")
 
     return {
         "predicted_satisfaction": {str(d): round(sat, 3) for d, sat in predictions},
