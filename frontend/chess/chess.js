@@ -145,8 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           );
           const result = await res.json();
-          console.log("Suggested difficulty:", suggested);
-          startChessGame(suggested);
+          console.log("Suggested difficulty:", result.suggested);
+          startChessGame(result.suggested);
         } catch (e) {
           console.error("Error fetching difficulty adjustment:", e);
           startChessGame(rawDifficulty);
