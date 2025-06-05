@@ -46,6 +46,7 @@ const translations = {
     gameOver: "Koniec gry",
   },
 };
+const BACKEND_URL = "https://fatigue-backend.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   const lang = document.cookie.match(/(?:^|; )lang=([^;]+)/)?.[1] || "en";
@@ -117,9 +118,44 @@ document.addEventListener("DOMContentLoaded", () => {
     ).textContent = `${t.difficultyLabel}${slider.value}`;
   });
 
-  document.getElementById("start-slider-btn").addEventListener("click", () => {
-    startChessGame(parseInt(slider.value));
-  });
+  document
+    .getElementById("start-slider-btn")
+    .addEventListener("click", async () => {
+      const rawDifficulty = parseInt(slider.value);
+      const testMode = localStorage.getItem("test_mode");
+      const button = document.getElementById("start-slider-btn");
+      button.disabled = true;
+      if (testMode === "tired2") {
+        const participantCode =
+          localStorage.getItem("participant_code") || null;
+        const wiscData = JSON.parse(localStorage.getItem("winsconsin_results"));
+        try {
+          const res = await fetch(
+            `${BACKEND_URL}/predict_difficulty_adjustment`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                participant_code: participantCode,
+                winsconsin_results: wiscData,
+                difficulty: rawDifficulty,
+              }),
+            }
+          );
+          const result = await res.json();
+          console.log("Suggested difficulty:", suggested);
+          startChessGame(suggested);
+        } catch (e) {
+          console.error("Error fetching difficulty adjustment:", e);
+          startChessGame(rawDifficulty);
+        }
+      } else {
+        startChessGame(rawDifficulty);
+      }
+      button.disabled = false;
+    });
 
   function startChessGame(difficulty) {
     localStorage.setItem("chess_difficulty", difficulty);

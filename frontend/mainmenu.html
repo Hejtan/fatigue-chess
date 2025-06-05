@@ -55,10 +55,7 @@
       <h1 id="title"></h1>
 
       <div class="test-block">
-        <button
-          class="test-button"
-          onclick="goToTest('minigames/london/index.html')"
-        >
+        <button class="test-button" disabled onclick="goToTest()">
           🟢 <span id="btn-fresh"></span>
         </button>
       </div>
@@ -66,7 +63,8 @@
       <div class="test-block">
         <button
           class="test-button"
-          onclick="goToTestWithCode('minigames/london/index.html', 'code1')"
+          disabled
+          onclick="goToTestWithCode('code1')"
         >
           🟡 <span id="btn-tired1"></span>
         </button>
@@ -75,17 +73,11 @@
       </div>
 
       <div class="test-block">
-        <button class="test-button" disabled>
-          🔒 <span id="btn-tired2"></span>
+        <button class="test-button" onclick="goToTestWithCode('code2')">
+          <span id="btn-tired2"></span>
         </button>
         <br />
-        <input
-          type="text"
-          disabled
-          class="code-input"
-          id="code2"
-          placeholder=""
-        />
+        <input type="text" class="code-input" id="code2" placeholder="" />
         <div class="note" id="note-may"></div>
       </div>
     </div>
@@ -96,8 +88,8 @@
           title: "Choose a test session",
           fresh: "Rested state",
           tired1: "After a tiring day",
-          tired2: "After a tiring day (May)",
-          note: "This option will be available in May.",
+          tired2: "After a tiring day (second)",
+          note: "You can access this without a code, but please write it if you do have one.",
           missingCode: "Please enter your participant code.",
           placehold: "Code",
           codeInvalidOrUsed: "Code not found or test already completed.",
@@ -107,8 +99,8 @@
           title: "Wybierz sesję testową",
           fresh: "Stan wypoczęty",
           tired1: "Po wyczerpującym dniu",
-          tired2: "Po wyczerpującym dniu (maj)",
-          note: "Ta opcja będzie dostępna w maju.",
+          tired2: "Po wyczerpującym dniu (drugi)",
+          note: "Test mozna rozpocząć bez kodu, ale proszę wpisz go jeśli go posiadasz.",
           missingCode: "Proszę podać kod uczestnika.",
           placehold: "Kod",
           codeInvalidOrUsed:
@@ -135,9 +127,9 @@
         document.getElementById("code1").placeholder = t.placehold;
       });
 
-      function goToTest(url) {
+      function goToTest() {
         localStorage.setItem("test_mode", "rested");
-        window.location.href = url;
+        window.location.href = "minigames/london/index.html";
       }
 
       const BACKEND_URL = "https://fatigue-backend.onrender.com";
@@ -161,14 +153,21 @@
         }
       }
 
-      async function goToTestWithCode(url, codeInputId) {
+      async function goToTestWithCode(codeInputId) {
         const code = document.getElementById(codeInputId).value.trim();
-        if (!code) {
+        const tiredLevel = codeInputId === "code1" ? "tired1" : "tired2";
+
+        if (tiredLevel === "tired1" && !code) {
           alert(t.missingCode);
           return;
         }
 
-        const tiredLevel = codeInputId === "code1" ? "tired1" : "tired2";
+        if (tiredLevel === "tired2" && !code) {
+          localStorage.setItem("test_mode", tiredLevel);
+          window.location.href = "minigames/winsconsin/index.html";
+          return;
+        }
+
         const valid = await checkCodeValidity(code, tiredLevel);
 
         if (!valid) {
@@ -178,7 +177,11 @@
 
         localStorage.setItem("test_mode", tiredLevel);
         localStorage.setItem("participant_code", code);
-        window.location.href = url;
+        targeturl =
+          tiredLevel === "tired1"
+            ? "minigames/london/index.html"
+            : "minigames/winsconsin/index.html";
+        window.location.href = targeturl;
       }
     </script>
   </body>

@@ -128,52 +128,62 @@ class PredictionRequest(BaseModel):
 async def predict_difficulty_adjustment(data: dict = Body()):
     participant_code = data.get("participantCode")
     difficulty = data.get("actualDifficulty")
-    wisc_correct_rt = data.get("wiscCorrectRT")
-    wisc_incorrect_rt = data.get("wiscIncorrectRT")
+    wisconsin_results = data.get("wisconsinResults")
 
-    # Validate required fields
-    if None in [difficulty, wisc_correct_rt, wisc_incorrect_rt]:
-        return {"error": "Missing one or more required fields"}
+    if difficulty is None or not wisconsin_results:
+        return {"error": "Missing difficulty or Wisconsin results"}
 
-    # Prepare list of difficulties to test
+    correct_rts = []
+    incorrect_rts = []
+
+    for trial in wisconsin_results:
+        raw_time = trial.get("timeMs")
+
+        error_type = trial.get("errorType")
+
+        if error_type is None:
+            correct_rts.append(raw_time)
+        elif error_type == "unexpected":
+            incorrect_rts.append(raw_time)
+
+    if not correct_rts:
+        return {"error": "No correct trials found"}
+
+    wisc_correct_rt = np.mean(correct_rts)
+    wisc_incorrect_rt = np.mean(incorrect_rts) if incorrect_rts else 100
+
+    # Define difficulty levels to try
     difficulties_to_try = [difficulty - 2, difficulty - 1, difficulty, difficulty + 1, difficulty + 2]
 
-    # Determine participant index (used in hierarchical model) or fallback to -1
     if participant_code and participant_code in participant_mapping:
         participant_idx = participant_mapping[participant_code]
         use_alpha = "participant"
     else:
         participant_idx = -1
         use_alpha = "global"
-    
-    # Extract samples from model trace
+
+    # Load model components
     mu_alpha = model.posterior["mu_alpha"].values.flatten()
-    sigma_alpha = model.posterior["sigma_alpha"].values.flatten()
-    alpha_samples = model.posterior["alpha"].values  # shape: (chains, draws, participants)
+    alpha_samples = model.posterior["alpha"].values
     beta_difficulty = model.posterior["beta_difficulty"].values.flatten()
     beta_fatigue = model.posterior["beta_fatigue"].values.flatten()
     beta_wisc_correct = model.posterior["beta_wisc_correct"].values.flatten()
     beta_wisc_incorrect = model.posterior["beta_wisc_incorrect"].values.flatten()
 
-    # Use mean fatigue of 1 (tired) for prediction
-    fatigue = 1
+    fatigue = 1  # fixed as we're in tired2 mode
 
-    # Prepare predictions
     predictions = []
     for d in difficulties_to_try:
-        # Standardize input like in training
         input_array = np.array([[d, wisc_correct_rt, wisc_incorrect_rt]])
         scaled_input = scaler.transform(input_array).flatten()
-
         diff, wisc_c_std, wisc_i_std = scaled_input
 
-        # Select alpha
-        if use_alpha == "participant":
-            alpha = alpha_samples[:, :, participant_idx].flatten()
-        else:
-            alpha = mu_alpha
+        alpha = (
+            alpha_samples[:, :, participant_idx].flatten()
+            if use_alpha == "participant"
+            else mu_alpha
+        )
 
-        # Compute predicted satisfaction samples
         sat_samples = (
             alpha
             + beta_wisc_correct * wisc_c_std
@@ -182,11 +192,9 @@ async def predict_difficulty_adjustment(data: dict = Body()):
             + beta_fatigue * fatigue
         )
 
-        mean_satisfaction = np.mean(sat_samples)
-        predictions.append((d, mean_satisfaction))
+        predictions.append((d, np.mean(sat_samples)))
 
-    # Choose best difficulty
-    best_difficulty, best_satisfaction = max(predictions, key=lambda x: x[1])
+    best_difficulty, _ = max(predictions, key=lambda x: x[1])
 
     return {
         "predicted_satisfaction": {str(d): round(sat, 3) for d, sat in predictions},
