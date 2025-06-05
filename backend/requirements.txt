@@ -3,8 +3,7 @@ uvicorn
 pymongo
 python-dotenv
 scikit-learn
-pymc
+pymc==5.23.0
 arviz
 numpy
 pandas
-pickle
