@@ -176,8 +176,12 @@ async def predict_difficulty_adjustment(data: dict = Body()):
 
     predictions = []
     for d in difficulties_to_try:
-        input_array = np.array([[d, wisc_correct_rt, wisc_incorrect_rt]])
-        scaled_input = scaler.transform(input_array).flatten()
+        input_df = pd.DataFrame([{
+            "difficulty": d,
+            "wisc_correct_rt": wisc_correct_rt,
+            "wisc_incorrect_rt": wisc_incorrect_rt
+        }])
+        scaled_input = scaler.transform(input_df).flatten()
         diff, wisc_c_std, wisc_i_std = scaled_input
 
         alpha = (

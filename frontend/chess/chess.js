@@ -231,8 +231,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startTimers() {
     gameInterval = setInterval(() => {
-      if (turn === "player") playerTime--;
-      else computerTime--;
+      if (turn === "player") {
+        playerTime--;
+        if (playerTime <= 0) {
+          playerTime = 0;
+          updateTimers();
+          clearInterval(gameInterval);
+          endGame(t.gameLoss, "loss"); // player loses on time
+          return;
+        }
+      } else {
+        computerTime--;
+        if (computerTime <= 0) {
+          computerTime = 0;
+          updateTimers();
+          clearInterval(gameInterval);
+          endGame(t.gameWin, "win"); // computer loses on time
+          return;
+        }
+      }
       updateTimers();
     }, 1000);
   }
