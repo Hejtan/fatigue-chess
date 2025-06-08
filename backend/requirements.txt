@@ -7,3 +7,4 @@ pymc==5.23.0
 arviz
 numpy
 pandas
+xgboost
