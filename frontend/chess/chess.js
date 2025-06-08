@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const chessResults = JSON.parse(
       localStorage.getItem("chess_results") || "[]"
     );
-    chessResults.push({
+    const gameData = {
       game: gameCount,
       result: outcome,
       moves: history.map((m) => ({
@@ -349,22 +349,25 @@ document.addEventListener("DOMContentLoaded", () => {
         piece: m.piece,
         san: m.san,
       })),
-    });
+    };
+
     if (testMode === "tired2") {
-      chessResults.adjusted_difficulty = parseInt(
+      gameData.adjusted_difficulty = parseInt(
         localStorage.getItem("chess_difficulty") || "0"
       );
-      chessResults.original_difficulty = parseInt(
+      gameData.original_difficulty = parseInt(
         localStorage.getItem("chess_original_difficulty") || "0"
       );
-      chessResults.tiredness_prediction = localStorage.getItem(
+      gameData.tiredness_prediction = localStorage.getItem(
         "tiredness_prediction"
       );
     } else {
-      chessResults.difficulty = parseInt(
+      gameData.difficulty = parseInt(
         localStorage.getItem("chess_difficulty") || "0"
       );
     }
+
+    chessResults.push(gameData);
     localStorage.setItem("chess_results", JSON.stringify(chessResults));
 
     text.textContent = message;

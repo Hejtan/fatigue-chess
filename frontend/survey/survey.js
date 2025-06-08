@@ -248,6 +248,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
             localStorage.getItem("winsconsin_results") || "[]"
           ),
           chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
+          predictedTired: localStorage.getItem("predicted_tired"),
         }
       : {
           participantCode: participantCode,
