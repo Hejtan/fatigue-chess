@@ -255,6 +255,6 @@ async def predict_difficulty_adjustment(data: dict = Body()):
         "suggested_difficulty": best_difficulty,
         "tiredness_prediction": {
             "label": int(tired_pred) if tired_pred is not None else None,
-            "probability": round(tired_prob, 3) if tired_prob is not None else None
+            "probability": round(float(tired_prob), 3) if tired_prob is not None else None
         }
     }
