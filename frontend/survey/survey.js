@@ -295,7 +295,8 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         message.style.marginTop = "2em";
         message.style.fontSize = "1.2em";
         message.style.fontWeight = "bold";
-        message.textContent = `${t.thankYou} ${t.reminder}`;
+        message.textContent =
+          mode === "rested" ? `${t.thankYou} ${t.reminder}` : t.thankYou;
         document.querySelector(".container").appendChild(message);
       } else {
         alert(t.errorGeneric || "Something went wrong. Please try again.");
