@@ -147,12 +147,15 @@ document.addEventListener("DOMContentLoaded", () => {
           const result = await res.json();
           console.log("Suggested difficulty:", result.suggested_difficulty);
           localStorage.setItem("chess_original_difficulty", rawDifficulty);
-          localStorage.setItem("chess_difficulty", result.suggested_difficulty);
+          localStorage.setItem(
+            "tiredness_prediction",
+            result.tiredness_prediction
+          );
           startChessGame(result.suggested_difficulty);
         } catch (e) {
           console.error("Error fetching difficulty adjustment:", e);
           localStorage.setItem("chess_original_difficulty", rawDifficulty);
-          localStorage.setItem("chess_difficulty", rawDifficulty);
+          localStorage.setItem("tiredness_prediction", null);
           startChessGame(rawDifficulty);
         }
       } else {
@@ -348,14 +351,17 @@ document.addEventListener("DOMContentLoaded", () => {
       })),
     });
     if (testMode === "tired2") {
-      resultEntry.adjusted_difficulty = parseInt(
+      chessResults.adjusted_difficulty = parseInt(
         localStorage.getItem("chess_difficulty") || "0"
       );
-      resultEntry.original_difficulty = parseInt(
+      chessResults.original_difficulty = parseInt(
         localStorage.getItem("chess_original_difficulty") || "0"
       );
+      chessResults.tiredness_prediction = localStorage.getItem(
+        "tiredness_prediction"
+      );
     } else {
-      resultEntry.difficulty = parseInt(
+      chessResults.difficulty = parseInt(
         localStorage.getItem("chess_difficulty") || "0"
       );
     }
