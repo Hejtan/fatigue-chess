@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("chess_original_difficulty", rawDifficulty);
           localStorage.setItem(
             "tiredness_prediction",
-            result.tiredness_prediction
+            JSON.stringify(result.tiredness_prediction)
           );
           startChessGame(result.suggested_difficulty);
         } catch (e) {
@@ -357,9 +357,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       gameData.original_difficulty = parseInt(
         localStorage.getItem("chess_original_difficulty") || "0"
-      );
-      gameData.tiredness_prediction = localStorage.getItem(
-        "tiredness_prediction"
       );
     } else {
       gameData.difficulty = parseInt(
