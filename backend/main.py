@@ -39,6 +39,33 @@ with pm.Model() as pm_model:
 with open("participant_mapping.pkl", "rb") as f:
     participant_mapping = pickle.load(f)
 
+xgb_pipeline = joblib.load("xgb_pipeline.pkl")
+feature_names = joblib.load("feature_names.pkl")
+
+def extract_wisconsin_features(trials):
+    df = pd.DataFrame(trials)
+
+    mean_time_correct = df.loc[df['trialType'] == 'correct', 'timeMs'].mean()
+    mean_time_unexpected = df.loc[df['trialType'] == 'unexpected', 'timeMs'].mean()
+    mean_time_rulechange = df.loc[df['trialType'] == 'rule-change-expected', 'timeMs'].mean()
+
+    features = pd.DataFrame([{
+        'mean_time': df['timeMs'].mean(),
+        'std_time': df['timeMs'].std(),
+        'min_time': df['timeMs'].min(),
+        'max_time': df['timeMs'].max(),
+        'median_time': df['timeMs'].median(),
+        'correct_rate': (df['trialType'] == 'correct').mean(),
+        'unexpected_error_rate': (df['trialType'] == 'unexpected').mean(),
+        'rulechange_error_rate': (df['trialType'] == 'rule-change-expected').mean(),
+        'mean_time_correct': mean_time_correct,
+        'mean_time_unexpected': mean_time_unexpected if pd.notna(mean_time_unexpected) else 100,
+        'mean_time_rulechange': mean_time_rulechange,
+        'trial_count': df.shape[0]
+    }])
+
+    return features[feature_names]
+
 @app.get("/")
 async def root():
     return {"message": "Fatigue study backend"}
@@ -97,21 +124,17 @@ async def submit_tired1(request: Request):
 @app.post("/submit/tired2")
 async def submit_tired2(request: Request):
     """
-    Submit tired2 data. Requires code to exist in rested AND tired1, and not yet in tired2.
+    Submit tired2 data.
     """
     data = await request.json()
     code = data.get("participantCode")
-    if not code:
-        return {"error": "Missing participantCode"}
-    
-    if not rested.find_one({"participantCode": code}):
-        return {"error": "Code not found in rested"}
-
-    if not tired1.find_one({"participantCode": code}):
-        return {"error": "Code not found in tired1 (tired1 test must be completed first)"}
-
-    if tired2.find_one({"participantCode": code}):
-        return {"error": "Code already exists in tired2"}
+    if code:
+        if not rested.find_one({"participantCode": code}):
+            return {"error": "Code not found in rested"}
+        if not tired1.find_one({"participantCode": code}):
+            return {"error": "Code not found in tired1 (tired1 test must be completed first)"}
+        if tired2.find_one({"participantCode": code}):
+            return {"error": "Code already exists in tired2"}
 
     tired2.insert_one(data)
     return {"status": "ok"}
@@ -201,12 +224,28 @@ async def predict_difficulty_adjustment(data: dict = Body()):
         predictions.append((d, np.mean(sat_samples)))
 
     best_difficulty, _ = max(predictions, key=lambda x: x[1])
+
     print("#########\n")
+
+    try:
+        feature_df = extract_wisconsin_features(wisconsin_results)
+        tired_pred = xgb_pipeline.predict(feature_df)[0]
+        tired_prob = xgb_pipeline.predict_proba(feature_df)[0][1]  # probability of "tired"
+        print("Tiredness prediction:", tired_pred, "with probability:", tired_prob)
+    except Exception as e:
+        print(f"Error during tiredness prediction: {e}")
+        tired_pred = None
+        tired_prob = None
+    
     print("Best difficulty found:", best_difficulty)
     print("Predictions:", predictions)
     print("#########\n")
 
     return {
         "predicted_satisfaction": {str(d): round(sat, 3) for d, sat in predictions},
-        "suggested_difficulty": best_difficulty
+        "suggested_difficulty": best_difficulty,
+        "tiredness_prediction": {
+            "label": int(tired_pred) if tired_pred is not None else None,
+            "probability": round(tired_prob, 3) if tired_prob is not None else None
+        }
     }

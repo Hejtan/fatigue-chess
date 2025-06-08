@@ -146,9 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
           );
           const result = await res.json();
           console.log("Suggested difficulty:", result.suggested_difficulty);
+          localStorage.setItem("chess_original_difficulty", rawDifficulty);
+          localStorage.setItem("chess_difficulty", result.suggested_difficulty);
           startChessGame(result.suggested_difficulty);
         } catch (e) {
           console.error("Error fetching difficulty adjustment:", e);
+          localStorage.setItem("chess_original_difficulty", rawDifficulty);
+          localStorage.setItem("chess_difficulty", rawDifficulty);
           startChessGame(rawDifficulty);
         }
       } else {
@@ -174,14 +178,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function applyStockfishDifficulty(level) {
-      const thinkTime = Math.floor(50 + level * 75);
+      const thinkTime = Math.floor(200 + level * 50);
       sendToEngine("uci");
-      sendToEngine(`setoption name Skill Level value ${level}`);
+      sendToEngine(
+        `setoption name Skill Level value ${Math.max(0, Math.min(20, level))}`
+      );
       sendToEngine(`setoption name Move Overhead value 0`);
       sendToEngine(`setoption name Minimum Thinking Time value 1`);
-      sendToEngine(
-        `setoption name Slow Mover value ${Math.max(10, 100 - level * 3)}`
-      );
+      sendToEngine(`setoption name Slow Mover value ${level * 5 + 15}`);
       sendToEngine(`setoption name Contempt value ${level < 5 ? 100 : 0}`);
       window.stockfishThinkTime = thinkTime;
     }
@@ -326,13 +330,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = document.getElementById("post-game-text");
     const button = document.getElementById("post-game-btn");
 
+    const testMode = localStorage.getItem("test_mode");
+
     const chessResults = JSON.parse(
       localStorage.getItem("chess_results") || "[]"
     );
     chessResults.push({
       game: gameCount,
       result: outcome,
-      difficulty: parseInt(localStorage.getItem("chess_difficulty") || "0"),
       moves: history.map((m) => ({
         from: m.from,
         to: m.to,
@@ -342,6 +347,18 @@ document.addEventListener("DOMContentLoaded", () => {
         san: m.san,
       })),
     });
+    if (testMode === "tired2") {
+      resultEntry.adjusted_difficulty = parseInt(
+        localStorage.getItem("chess_difficulty") || "0"
+      );
+      resultEntry.original_difficulty = parseInt(
+        localStorage.getItem("chess_original_difficulty") || "0"
+      );
+    } else {
+      resultEntry.difficulty = parseInt(
+        localStorage.getItem("chess_difficulty") || "0"
+      );
+    }
     localStorage.setItem("chess_results", JSON.stringify(chessResults));
 
     text.textContent = message;
@@ -372,7 +389,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function makeComputerMove() {
     if (game.game_over()) {
-      // The game should already have been handled in setTurn
       return;
     }
 

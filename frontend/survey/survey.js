@@ -164,7 +164,7 @@ if (mode === "rested") {
   document.getElementById("generated-code-display").textContent =
     participantCode;
   showSurvey();
-} else if (mode === "tired1" || mode === "tired2") {
+} else if (mode === "tired1") {
   document.getElementById("code-entry").classList.remove("hidden");
   document.getElementById("code-entry-label").textContent = t.enterCode;
   document.getElementById("verify-code-btn").textContent = t.verify;
@@ -183,6 +183,15 @@ if (mode === "rested") {
       }
     });
   });
+} else if (mode === "tired2") {
+  const storedCode = localStorage.getItem("participant_code");
+  if (storedCode && storedCode.trim() !== "") {
+    participantCode = storedCode.trim();
+  } else {
+    participantCode =
+      "ANON_" + Math.random().toString(36).substr(2, 6).toUpperCase();
+  }
+  showSurvey();
 }
 
 function showSurvey() {
@@ -230,22 +239,35 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     return;
   }
 
-  const finalResults = {
-    participantCode: participantCode,
-    survey: surveyResults,
-    towerOfLondon: JSON.parse(localStorage.getItem("london_results") || "[]"),
-    matchPairs: {
-      time: parseInt(localStorage.getItem("matchpairs_time")),
-      mistakes: parseInt(localStorage.getItem("matchpairs_mistakes")),
-    },
-    stroop: {
-      trials: JSON.parse(localStorage.getItem("stroop_results") || "[]"),
-      mistakes: parseInt(localStorage.getItem("stroop_mistakes")),
-    },
-    winsconsin: JSON.parse(localStorage.getItem("winsconsin_results") || "[]"),
-    chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
-  };
-
+  const finalResults =
+    mode === "tired2"
+      ? {
+          participantCode: participantCode,
+          survey: surveyResults,
+          winsconsin: JSON.parse(
+            localStorage.getItem("winsconsin_results") || "[]"
+          ),
+          chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
+        }
+      : {
+          participantCode: participantCode,
+          survey: surveyResults,
+          towerOfLondon: JSON.parse(
+            localStorage.getItem("london_results") || "[]"
+          ),
+          matchPairs: {
+            time: parseInt(localStorage.getItem("matchpairs_time")),
+            mistakes: parseInt(localStorage.getItem("matchpairs_mistakes")),
+          },
+          stroop: {
+            trials: JSON.parse(localStorage.getItem("stroop_results") || "[]"),
+            mistakes: parseInt(localStorage.getItem("stroop_mistakes")),
+          },
+          winsconsin: JSON.parse(
+            localStorage.getItem("winsconsin_results") || "[]"
+          ),
+          chess: JSON.parse(localStorage.getItem("chess_results") || "[]"),
+        };
   const endpoint =
     mode === "rested"
       ? "/submit/rested"
@@ -293,8 +315,6 @@ function verifyCode(code) {
     .then((data) => {
       if (mode === "tired1") {
         return data.in_rested && !data.in_tired1;
-      } else if (mode === "tired2") {
-        return data.in_rested && data.in_tired1 && !data.in_tired2;
       }
       return false;
     })
