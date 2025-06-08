@@ -137,10 +137,6 @@ async def submit_tired2(request: Request):
     data = await request.json()
     code = data.get("participantCode")
     if code:
-        if not rested.find_one({"participantCode": code}):
-            return {"error": "Code not found in rested"}
-        if not tired1.find_one({"participantCode": code}):
-            return {"error": "Code not found in tired1 (tired1 test must be completed first)"}
         if tired2.find_one({"participantCode": code}):
             return {"error": "Code already exists in tired2"}
 
