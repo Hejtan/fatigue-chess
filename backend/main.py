@@ -227,6 +227,7 @@ async def predict_difficulty_adjustment(data: dict = Body()):
 
     print("#########\n")
 
+    print(wisconsin_results)
     try:
         feature_df = extract_wisconsin_features(wisconsin_results)
         tired_pred = xgb_pipeline.predict(feature_df)[0]
