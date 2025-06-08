@@ -45,6 +45,14 @@ feature_names = joblib.load("feature_names.pkl")
 def extract_wisconsin_features(trials):
     df = pd.DataFrame(trials)
 
+    # Add trialType column based on correct and errorType
+    def determine_trial_type(row):
+        if row["correct"]:
+            return "correct"
+        return row.get("errorType", "unknown")
+
+    df["trialType"] = df.apply(determine_trial_type, axis=1)
+
     mean_time_correct = df.loc[df['trialType'] == 'correct', 'timeMs'].mean()
     mean_time_unexpected = df.loc[df['trialType'] == 'unexpected', 'timeMs'].mean()
     mean_time_rulechange = df.loc[df['trialType'] == 'rule-change-expected', 'timeMs'].mean()
