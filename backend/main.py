@@ -195,6 +195,7 @@ async def predict_difficulty_adjustment(data: dict = Body()):
     mu_alpha = model.posterior["mu_alpha"].values.flatten()
     alpha_samples = model.posterior["alpha"].values
     beta_difficulty = model.posterior["beta_difficulty"].values.flatten()
+    beta_difficulty_squared = model.posterior["beta_difficulty_squared"].values.flatten()
     beta_fatigue = model.posterior["beta_fatigue"].values.flatten()
     beta_wisc_correct = model.posterior["beta_wisc_correct"].values.flatten()
     beta_wisc_incorrect = model.posterior["beta_wisc_incorrect"].values.flatten()
@@ -210,6 +211,7 @@ async def predict_difficulty_adjustment(data: dict = Body()):
         }])
         scaled_input = scaler.transform(input_df).flatten()
         diff, wisc_c_std, wisc_i_std = scaled_input
+        diff_squared = diff**2
 
         alpha = (
             alpha_samples[:, :, participant_idx].flatten()
@@ -222,6 +224,7 @@ async def predict_difficulty_adjustment(data: dict = Body()):
             + beta_wisc_correct * wisc_c_std
             + beta_wisc_incorrect * wisc_i_std
             + beta_difficulty * diff
+            + beta_difficulty_squared * diff_squared
             + beta_fatigue * fatigue
         )
 
